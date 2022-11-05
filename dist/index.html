@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Bird</title>
+<script defer src="main.8bdc59980d554ce1498a.js"></script><link href="main.css" rel="stylesheet"></head>
+<body>
+   <div class="app" id="app">
+      <div class="app-header">
+        <div class="header__top">
+          <a href="/"><img class="header__logo" alt="Song bird"></a>
+          <div class="header__score">Score: <span class="header__score-points">0</span></div>
+        </div>
+        <ul class="header__pagination">
+          <li class="header__pagination-item"><button class="header__pagination_button header__pagination-button_active">Разминка</button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button">Воробьиные</button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button">Лесные птицы</button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button">Певчие птицы</button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button">Хищные птицы</button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button">Морские птицы</button></li>
+        </ul>
+      </div>
+      <main class="main">
+        <div class="main__sound">
+          <img alt="" class="main__sound-img">
+          <div class="main__sound-content">
+            <h2 class="main__sound-content-title">******</h2>
+            <div class="main__sound-player">
+              <button class="main__sound-play"></button>
+              <div class="main__player-content">
+                  <div class="main__player-timeline">
+                    <div class="main__player-progress">
+                      <div class="main__player-progress-circle"></div>
+                    </div>
+                  </div>
+                  <div class="main__player-content-time">
+                    <div class="main__player-content-time_current">00:00</div>
+                    <div class="main__player-content-time_total">00:00</div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="main__controls">
+          <ul class="main__controls-block main__controls-list">
+          </ul>
+          <div class="main__controls-block">
+            <div class="main__controls-block-content main__controls-block-content_active">
+              <p>Послушайте плеер</p>
+              <p>Выберите птицу из списка</p>
+            </div>
+            <div class="main__controls-block-content_about">
+              <div class="block-content_about__content">
+                <img src="" alt="" class="block-content_about__img">
+                <div class="block-content_about__bird">
+                  <h2 class="block-content_about__bird-heading">Козодой</h2>
+                  <p class="block-content_about__bird-description">Caprimulgus europaeus</p>
+                  <div class="main__sound-player">
+                    <button class="main__sound-play about-bird__play"></button>
+                    <div class="main__player-content">
+                        <div class="main__player-timeline about-bird__timeline">
+                          <div class="main__player-progress about-bird__progress">
+                            <div class="main__player-progress-circle"></div>
+                          </div>
+                        </div>
+                        <div class="main__player-content-time">
+                          <div class="main__player-content-time_current about-bird__current">00:00</div>
+                          <div class="main__player-content-time_total about-total">00:00</div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="main__controls-block-content_description">
+                Козодой – неприметная птица, известная благодаря своему голосу.
+                Песня козодоя звучит как монотонная трель похожая на тарахтение мотоцикла.
+                Такое дребезжание слышно от заката до рассвета, его тональность, частота и громкость изменяются.
+              </p>
+            </div>
+          </div>
+        </div>
+        <button disabled class="main__btn">Следующий уровень</button>
+      </main>
+   </div>
+</body>
+</html>

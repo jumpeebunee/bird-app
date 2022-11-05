@@ -1,0 +1,36 @@
+{
+  "name": "bird-app",
+  "version": "1.0.0",
+  "description": "bird app for school",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "start": "webpack-dev-server --mode development --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jumpeebunee/bird-app.git"
+  },
+  "keywords": [
+    "js",
+    "app",
+    "html"
+  ],
+  "author": "Egor Mihailove",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jumpeebunee/bird-app/issues"
+  },
+  "homepage": "https://github.com/jumpeebunee/bird-app#readme",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "sass": "^1.56.0",
+    "sass-loader": "^13.1.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
