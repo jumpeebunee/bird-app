@@ -3,100 +3,199 @@ import "./styles/style.scss";
 import logo from "./assets/logo.svg";
 import bird from "./assets/bird.jpg";
 import birds from "./data/birds.js";
+import birdsEn from "./data/birdsEn.js";
 import getRandomNumber from "./modules/getRandomNumber.js";
 import getTimeCode from "./modules/getTimeCode.js";
+import success from "./audio/success.ogg";
+import error from "./audio/error.ogg";
+import translations from "./data/translations";
+import translateApp from "./modules/translateApp";
 
-function init() {
+function init() {    
+    const successAudio = new Audio(success);
+    const errorAudio = new Audio(error); 
+
+    let appLanguage = (localStorage.getItem('language')) ? localStorage.getItem('language') : 'en';
 
     let levelFinished = false;
 
+    let currentStage = 0;
     let totalScore = 0;
     let levelScore = 5;
 
-    let currentStage = 0;
     let generatedBird = null;
     let totalBirds = null;
 
-    let generateBirdAudio = null;
-    let cardBirdAudio = null;
+    let mainAudio = null;
+    let cardAudio = null;
 
-    let t = null;
+    let t = null; 
 
-    document.querySelector('.header__logo').src = logo;
-    document.querySelector('.main__sound-img').src = bird;
+    function createStartImages() {
+        document.querySelector('.header__logo').src = logo;
+        document.querySelector('.main__sound-img').src = bird;
+    };
 
-    const generateBirdBtn = document.querySelector('.main__sound-play');
-    const generateBirdTime = document.querySelector('.main__player-content-time_current');
-    const generateBirdProgress = document.querySelector('.main__player-progress');
+    function createStartButtons() {
+        const modal = document.querySelector('.modal');
+        const gallery = document.querySelector('.bird-gallery');
+        const language = document.querySelector('.change-langue');
 
-    function generateBird() {
-        generatedBird = birds[currentStage][getRandomNumber(0,5)];
-        
-        generateBirdAudio = new Audio(generatedBird.audio);
-        generateBirdAudio.addEventListener('loadeddata', () => {
-            const generatedAudioTime = getTimeCode(generateBirdAudio.duration);
-            document.querySelector('.main__player-content-time_total').textContent = `${generatedAudioTime.minutes}:${generatedAudioTime.seconds}`;
+        const play = document.querySelector('.main__sound-play');
+        const time = document.querySelector('.main__player-content-time_current');
+        const progress = document.querySelector('.main__player-progress');
+
+        const mainVolume = document.querySelector('.main__player-range');
+        const cardVolume = document.querySelector('.current__player-range');
+
+        mainVolume.addEventListener("input", (e) => {
+            mainAudio.volume = e.target.value;  
         });
 
-        totalBirds = birds[currentStage];
-    };
-    
-    //* MusicPlayer
+        cardVolume.addEventListener('input', (e) => {
+            cardAudio.volume = e.target.value;
+        });
 
-    function renderPlayer() {
-        generateBirdBtn.addEventListener('click', () => generatePlay(generateBirdTime, generateBirdProgress));
-        generateTimeline();
-        createListOfAnswers();
+        gallery.addEventListener('click', () => {
+            modal.classList.toggle('modal_active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target.className === 'modal modal_active') modal.classList.remove('modal_active');
+        });
+
+        language.addEventListener('click', () => changeLanguage());
+
+        play.addEventListener('click', () => generateItemPlay(mainAudio, play, time, progress));
     };
 
-    function generatePlay(time, progress) {
-        if (generateBirdAudio.paused) {
-            generateBirdAudio.play();
-            generateBirdBtn.classList.add('main__sound-play_pause');
-            t = setInterval(() => {
-                if (generateBirdAudio.paused) {
-                    generateBirdAudio.pause();
-                    generateBirdBtn.classList.remove('main__sound-play_pause');
+    function generateBird() {
+        if (appLanguage === 'ru') {
+            totalBirds = birds[currentStage];
+            generatedBird = birds[currentStage][getRandomNumber(0,5)];
+        } else {
+            totalBirds = birdsEn[currentStage];
+            generatedBird = birdsEn[currentStage][getRandomNumber(0,5)];
+        };
+
+        mainAudio = new Audio(generatedBird.audio);
+        mainAudio.volume = 0.7;
+        mainAudio.addEventListener('loadeddata', () => {
+            const time = getTimeCode(mainAudio.duration);
+            document.querySelector('.main__player-content-time_total').textContent = `${time.minutes}:${time.seconds}`;
+            createTimeline(document.querySelector('.main__player-timeline'), mainAudio);
+        });
+    };
+
+    function createGallery() {
+        const list = document.querySelector('.modal-content');
+
+        let totalBirds = [];
+        birds.map(item => totalBirds.push(...item));
+
+        totalBirds.forEach(bird => {
+            createGalleryItem(list, bird);
+        });
+    };
+
+    function createGalleryItem(list, bird) {
+        const audio = new Audio(bird.audio);
+
+        audio.addEventListener('loadeddata', () => {
+            const generatedAudioTime = getTimeCode(audio.duration);
+            totalTime.textContent = `${generatedAudioTime.minutes}:${generatedAudioTime.seconds}`;
+        });
+
+        audio.volume = 0.7;
+
+        const item = document.createElement('li');
+
+        const content = document.createElement('div');
+        const contentDescription = document.createElement('div');
+        const heading = document.createElement('h2');
+        const species = document.createElement('h3');
+
+        const description = document.createElement('p');
+        const image = document.createElement('img');
+
+        const player = document.createElement('div');
+        const playerBtn = document.createElement('button');
+        const playerContent = document.createElement('div');
+        const timeline = document.createElement('div');
+        const progress = document.createElement('div');
+        const circle = document.createElement('div');
+
+        const contentTime = document.createElement('div');
+        const currentTime = document.createElement('div');
+        const totalTime = document.createElement('div');
+
+        circle.classList.add('main__player-progress-circle');
+        progress.classList.add('main__player-progress');
+        timeline.classList.add('main__player-timeline');
+        playerContent.classList.add('main__player-content');
+        player.classList.add('main__sound-player');
+        playerBtn.classList.add('main__sound-play');
+
+        contentTime.classList.add('main__player-content-time');
+        currentTime.classList.add('main__player-content-time_current');
+        totalTime.classList.add('main__player-content-time_total');
+        contentDescription.classList.add('main__player-content')
+        
+        currentTime.textContent = '00:00';
+        totalTime.textContent = '00:00';
+
+        contentTime.append(currentTime, totalTime);
+
+        progress.append(circle);
+        timeline.append(progress);
+        playerContent.append(timeline, contentTime);
+        player.append(playerBtn, playerContent);
+        playerBtn.addEventListener('click', () => generateItemPlay(audio, playerBtn, currentTime, progress));
+
+        item.classList.add('gallery__item');
+        content.classList.add('gallery__item-content');
+
+        heading.textContent = bird.name;
+        species.textContent = bird.species;
+        image.src = bird.image; 
+        description.textContent = bird.description;
+
+        contentDescription.append(heading, species, player);
+        content.append(image, contentDescription);
+        item.append(content, description);
+        list.append(item);
+    };
+
+    function generateItemPlay(audio, button, time, progress) {
+        if (audio.paused) {
+            audio.play();
+            button.classList.add('main__sound-play_pause');
+            const t = setInterval(() => {
+                if (audio.paused) {
+                    audio.pause();
+                    button.classList.remove('main__sound-play_pause');
                     clearInterval(t);
                 };
-                const currentTimes = getTimeCode(generateBirdAudio.currentTime);
-                progress.style.width = generateBirdAudio.currentTime / generateBirdAudio.duration * 100 + 1 + '%';
+                const currentTimes = getTimeCode(audio.currentTime);
+                progress.style.width = audio.currentTime / audio.duration * 100 + 1 + '%';
                 time.textContent = `${currentTimes.minutes}:${currentTimes.seconds}`;
-            }, 200);
+            });
         } else {
-            generateBirdAudio.pause();
-            generateBirdBtn.classList.remove('main__sound-play_pause');
-            clearInterval(t);
+            audio.pause();
+            button.classList.remove('main__sound-play_pause');
         };
     };
 
-    function cardAudio() {
-        const btn = document.querySelector('.about-bird__play');
-        const time = document.querySelector('.about-bird__current');
-        const progress = document.querySelector('.about-bird__progress');
-
-        if (cardBirdAudio.paused) {
-            cardBirdAudio.play();
-            btn.classList.add('main__sound-play_pause');
-            t = setInterval(() => {
-                if (cardBirdAudio.paused)  {
-                    cardBirdAudio.pause();
-                    btn.classList.remove('main__sound-play_pause');
-                    clearInterval(t);
-                };
-                const currentTimes = getTimeCode(cardBirdAudio.currentTime);
-                progress.style.width = cardBirdAudio.currentTime / cardBirdAudio.duration * 100 + 1 + '%';
-                time.textContent = `${currentTimes.minutes}:${currentTimes.seconds}`;
-            }, 200);
-        } else {
-            cardBirdAudio.pause();
-            btn.classList.remove('main__sound-play_pause');
-            clearInterval(t);
-        };
+    function changeLanguage() {
+        const button = document.querySelector('.change-langue');
+        button.addEventListener('click', (e) => {
+            appLanguage = (appLanguage === 'ru') ? 'en' : 'ru';
+            localStorage.setItem('language', appLanguage);
+            window.location.reload();
+        });
     };
 
-    function cardTimeline(audio) {
-        const timeline = document.querySelector('.about-bird__timeline');
+    function createTimeline(timeline, audio) {
         timeline.addEventListener('click', (e) => {
             if (audio.paused) return;
             const timelineWidth = window.getComputedStyle(timeline).width;
@@ -105,22 +204,10 @@ function init() {
         });
     };
 
-    function generateTimeline() {
-        const timeline = document.querySelector('.main__player-timeline');
-        timeline.addEventListener('click', (e) => {
-            if (generateBirdAudio.paused) return;
-            const timelineWidth = window.getComputedStyle(timeline).width;
-            const timeToSeek = e.offsetX / parseInt(timelineWidth) * generateBirdAudio.duration;
-            generateBirdAudio.currentTime = timeToSeek;
-        });
-    };
-
-    function updateTimeline() {
+    function clearTimeline() {
         document.querySelector('.main__player-progress').style.width = '20%';
         document.querySelector('.about-bird__progress').style.width = '20%';
     };
-
-    //* GenereateListOfButtons
 
     function createListOfAnswers() {
         const list = document.querySelector('.main__controls-list');
@@ -131,19 +218,17 @@ function init() {
         });
     };
 
-    function createItemAnswer(item) {
-        const listItem = document.createElement('li');
-        const listBtn = document.createElement('button');
+    function createItemAnswer(bird) {
+        const item = document.createElement('li');
+        const button = document.createElement('button');
 
-        listBtn.textContent = item.name;
-        listBtn.addEventListener('click', (e) => checkIsTrue(e));
+        button.textContent = bird.name;
+        button.addEventListener('click', (e) => checkIsTrue(e));
 
-        listItem.append(listBtn);
+        item.append(button);
         
-        return listItem;
+        return item;
     };
-
-    //* CheckAnswerTrueOrFalse
 
     function checkIsTrue(e) {
         const target = e.target;
@@ -158,32 +243,36 @@ function init() {
             birdFinded();
         } else {
             target.classList.add('controls-list__btn_false');
+            errorAudio.play();
             levelScore -= 1;
         };
 
         createBirdCard(target);
     };
-    
-    //* BirdCard
 
     function createBirdCard(item) {
-        if (cardBirdAudio) cardBirdAudio.pause();
-
-        document.querySelector('.main__controls-block-content_about').classList.add('main__controls-block-content_about_active');
-        document.querySelector('.main__controls-block-content').classList.remove('main__controls-block-content_active');
+        if (cardAudio) cardAudio.pause();
 
         const bird = findBird(item.textContent);
         generateBirdCardContent(bird);
 
-        cardBirdAudio = new Audio(bird.audio);
-        cardBirdAudio.addEventListener('loadeddata', () => {
-            const cardBirdAudioTime = getTimeCode(cardBirdAudio.duration);
-            document.querySelector('.about-total').textContent = `${cardBirdAudioTime.minutes}:${cardBirdAudioTime.seconds}`;
+        document.querySelector('.main__controls-block-content_about').classList.add('main__controls-block-content_about_active');
+        document.querySelector('.main__controls-block-content').classList.remove('main__controls-block-content_active');
+
+        cardAudio = new Audio(bird.audio);
+        cardAudio.addEventListener('loadeddata', () => {
+            const time = getTimeCode(cardAudio.duration);
+            document.querySelector('.about-total').textContent = `${time.minutes}:${time.seconds}`;
         });
 
-        const cardAudioBtn = document.querySelector('.about-bird__play');
-        cardAudioBtn.addEventListener('click', cardAudio);
-        cardTimeline(cardBirdAudio);
+        const button = document.querySelector('.about-bird__play');
+        button.addEventListener('click', play);
+
+        function play() {
+            generateItemPlay(cardAudio, button, document.querySelector('.about-total'), document.querySelector('.about-bird__progress'));
+        };
+        const timeline = document.querySelector('.about-bird__timeline');
+        createTimeline(timeline, cardAudio);
     };
 
     function generateBirdCardContent(bird) {
@@ -197,9 +286,10 @@ function init() {
         return totalBirds.find((item) => item.name === bird);
     };
 
-    //* FindedBird
-
+    
     function birdFinded() {
+        successAudio.play();
+
         const heading = document.querySelector('.main__sound-content-title');
         const image = document.querySelector('.main__sound-img');
 
@@ -207,7 +297,7 @@ function init() {
         levelScore = 5;
         levelFinished = true;
 
-        document.querySelector('.header__score-points').textContent = totalScore;
+        document.querySelector('.header__score-points').textContent = `${(appLanguage === 'ru' ? translations.ru.options[2] : translations.en.options[2])} ${totalScore}`;
 
         heading.textContent = generatedBird.name;
         image.src = generatedBird.image;
@@ -222,20 +312,24 @@ function init() {
     };
 
     function nextStage() {
+
         currentStage += 1;
 
-        generateBirdAudio.pause();
-        cardBirdAudio.pause();
+        mainAudio.pause();
+        cardAudio.pause();
+        clearTimeline();
 
-        updateTimeline();
-        clearStage();
-
-        levelFinished = false;
-
-        generateBird();
-        changeStageTab();
-        createListOfAnswers();
-        document.querySelector('.main__btn').disabled = true;
+        if (currentStage === 6) {
+            finishGame();
+        } else {
+            clearStage();
+            levelFinished = false;
+    
+            generateBird();
+            changeStageTab();
+            createListOfAnswers();
+            document.querySelector('.main__btn').disabled = true;
+        };
     };
 
     function changeStageTab() {
@@ -250,9 +344,37 @@ function init() {
         document.querySelector('.main__controls-block-content_about').classList.remove('main__controls-block-content_about_active');
         document.querySelector('.main__controls-block-content').classList.add('main__controls-block-content_active');
     };
-    
-    generateBird();
-    renderPlayer();
-};
 
-document.addEventListener("DOMContentLoaded", () => init());
+    function finishGame() {
+
+        const btnReload = document.querySelector('.btn-reload');
+
+        const finishTextStart = (appLanguage === 'ru') ? translations.ru.finishGame[1] : translations.en.finishGame[1];
+        const finishTextEnd = (appLanguage === 'ru') ? translations.ru.finishGame[2] : translations.en.finishGame[2];
+
+        document.querySelector('.main-winner__description').textContent = `${finishTextStart} ${totalScore} ${finishTextEnd}`;
+        
+        totalScore = 0;
+        levelScore = 5;
+        currentStage = -1;
+
+        document.querySelector('.main-game').classList.remove('main-game_active');
+        document.querySelector('.main-winner').classList.add('main-winner_active');
+
+        btnReload.addEventListener('click', newGame);
+    };
+
+    function newGame() {
+        document.querySelector('.main-game').classList.add('main-game_active');
+        document.querySelector('.main-winner').classList.remove('main-winner_active');
+        document.querySelector('.header__score-points').textContent = 0;
+        nextStage();
+    }; 
+
+    createStartImages();
+    createStartButtons();
+    translateApp(appLanguage);
+    generateBird();
+    createGallery();
+    createListOfAnswers();
+};

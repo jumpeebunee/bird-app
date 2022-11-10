@@ -11,18 +11,24 @@
       <div class="app-header">
         <div class="header__top">
           <a href="/"><img class="header__logo" alt="Song bird"></a>
-          <div class="header__score">Score: <span class="header__score-points">0</span></div>
+          <div>
+          </div>
+          <div class="header__content">
+            <button class="bird-gallery">Галерея птиц</button>
+            <button value="ru" class="change-langue">RU</button>
+            <div class="header__score"><span class="header__score-points">0</span></div>
+          </div>
         </div>
         <ul class="header__pagination">
-          <li class="header__pagination-item"><button class="header__pagination_button header__pagination-button_active">Разминка</button></li>
-          <li class="header__pagination-item"><button class="header__pagination_button">Воробьиные</button></li>
-          <li class="header__pagination-item"><button class="header__pagination_button">Лесные птицы</button></li>
-          <li class="header__pagination-item"><button class="header__pagination_button">Певчие птицы</button></li>
-          <li class="header__pagination-item"><button class="header__pagination_button">Хищные птицы</button></li>
-          <li class="header__pagination-item"><button class="header__pagination_button">Морские птицы</button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button header__pagination-button_active"></button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button"></button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button"></button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button"></button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button"></button></li>
+          <li class="header__pagination-item"><button class="header__pagination_button"></button></li>
         </ul>
       </div>
-      <main class="main">
+      <main class="main main-game main-game_active">
         <div class="main__sound">
           <img alt="" class="main__sound-img">
           <div class="main__sound-content">
@@ -30,17 +36,18 @@
             <div class="main__sound-player">
               <button class="main__sound-play"></button>
               <div class="main__player-content">
-                  <div class="main__player-timeline">
-                    <div class="main__player-progress">
-                      <div class="main__player-progress-circle"></div>
+                    <div class="main__player-timeline">
+                      <div class="main__player-progress">
+                        <div class="main__player-progress-circle"></div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="main__player-content-time">
-                    <div class="main__player-content-time_current">00:00</div>
-                    <div class="main__player-content-time_total">00:00</div>
-                  </div>
+                    <div class="main__player-content-time">
+                      <div class="main__player-content-time_current">00:00</div>
+                      <div class="main__player-content-time_total">00:00</div>
+                    </div>
               </div>
             </div>
+            <input class="main__player-range" value="0.7" type="range" min="0" max="1" step="0.1">
           </div>
         </div>
         <div class="main__controls">
@@ -48,8 +55,8 @@
           </ul>
           <div class="main__controls-block">
             <div class="main__controls-block-content main__controls-block-content_active">
-              <p>Послушайте плеер</p>
-              <p>Выберите птицу из списка</p>
+              <p class="main__controls-description-top">Послушайте плеер</p>
+              <p class="main__controls-description-bottom">Выберите птицу из списка</p>
             </div>
             <div class="main__controls-block-content_about">
               <div class="block-content_about__content">
@@ -71,6 +78,7 @@
                         </div>
                     </div>
                   </div>
+                  <input class="current__player-range" value="0.7" type="range" min="0" max="1" step="0.1">
                 </div>
               </div>
               <p class="main__controls-block-content_description">
@@ -81,8 +89,17 @@
             </div>
           </div>
         </div>
-        <button disabled class="main__btn">Следующий уровень</button>
+        <button disabled class="main__btn btn">Следующий уровень</button>
       </main>
+      <main class="main main-winner">
+        <h1 class="main-winner__heading">Поздравляем!</h1>
+        <p class="main-winner__description">Вы прошли викторину и набрали 14 из 30 возможных баллов</p>
+        <button class="btn-reload btn">Начать заново</button>
+      </main>
+      <div class="modal">
+        <div class="modal-content">
+        </div>
+      </div>
    </div>
 </body>
 </html>

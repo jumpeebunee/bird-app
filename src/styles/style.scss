@@ -11,6 +11,92 @@ body {
 
 $lime: #D3F16C;
 
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100px; 
+  height: 5px;
+  background: #F5F5F5;
+  border-radius: 4px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background: #24282C;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+*::-webkit-scrollbar {
+  width: 0px; 
+}
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color:  rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+}
+
+.modal_active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    width: 600px;
+    height: 400px;
+    padding: 30px 30px 40px 30px;
+    background-color: #fff;
+    overflow-y: scroll;
+    border-radius: 20px;
+
+    img {
+        width: 100%;
+        max-width: 184px;
+        height: 124px;
+        margin-right: 20px;
+        border-radius: 20px;
+    }
+
+    h2 {
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 29px;
+    }
+
+    h3 {
+        margin-top: 5px;
+        font-size: 16px;
+        line-height: 19px;
+    }
+
+    p {
+        margin-top: 15px;
+        font-size: 16px;
+        line-height: 19px;
+    }
+}
+
+.gallery__item {
+    list-style: none;
+    &:not(:last-child) {
+        margin-bottom: 40px;
+    }
+}
+
+.gallery__item-content {
+    display: flex;
+}
+
 .app {
     width: 100%;
     max-width: 1160px;
@@ -18,6 +104,19 @@ $lime: #D3F16C;
     padding: 30px 50px;
     background-color: #F9FAF5;
     border-radius: 20px;
+}
+
+.btn {
+    width: 100%;
+    margin-top: 30px;
+    padding-top: 23px;
+    padding-bottom: 23px;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    color: #fff;
+    background-color: #24282C;
+    border-radius: 4px;
 }
 
 .header__top {
@@ -45,6 +144,18 @@ $lime: #D3F16C;
     }
 }
 
+.header__content {
+    display: flex;
+    align-items: center;
+
+    button {
+        margin-right: 30px;
+        font-size: 20px;
+        line-height: 24px;
+        background-color: transparent;
+    }
+}
+
 .header__pagination-button_active {
     position: relative;
 
@@ -59,6 +170,26 @@ $lime: #D3F16C;
     }
 }
 
+.main-game {
+    display: none;
+}
+
+.main-game_active {
+    display: block;
+}
+
+.main-winner {
+    display: none;
+}
+
+.main-winner_active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 198px;
+}
+
 .main__sound {
     display: flex;
     justify-content: space-between;
@@ -66,6 +197,10 @@ $lime: #D3F16C;
     padding: 25px 30px;
     background-color: #fff;
     border-radius: 20px;
+}
+
+.main__player-range {
+    margin-top: 15px;
 }
 
 .main__sound-img {
@@ -113,6 +248,11 @@ $lime: #D3F16C;
     height: 4px;
     background: #F5F5F5;
     cursor: pointer;
+    position: relative;
+}
+
+.main__player-modal {
+    width: 300px;
 }
 
 .main__player-progress {
@@ -152,6 +292,7 @@ $lime: #D3F16C;
 }
 
 .main__controls-block {
+    height: 350px;
     padding: 25px 30px;
     background-color: #fff;
     border-radius: 20px;
@@ -224,19 +365,6 @@ $lime: #D3F16C;
     }
 }
 
-.main__btn {
-    width: 100%;
-    margin-top: 30px;
-    padding-top: 23px;
-    padding-bottom: 23px;
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 22px;
-    color: #fff;
-    background-color: #24282C;
-    border-radius: 4px;
-}
-
 .block-content_about__content {
     display: flex;
 }
@@ -270,4 +398,326 @@ $lime: #D3F16C;
     margin-top: 14px;
     font-size: 16px;
     line-height: 19px;
+}
+
+.main-winner__heading {
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 77px;
+}
+
+.main-winner__description {
+    margin-bottom: 207px;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 29px;
+}
+
+@media (max-width: 1000px) {
+    .app {
+        max-width: 840px;
+        margin: 50px auto;
+        padding: 20px 30px;
+    }
+    
+    .btn {
+        padding-top: 15px;
+        padding-bottom: 16px;
+        font-size: 16px;
+    }
+
+    .header__pagination {
+        margin-top: 25px;
+        padding-bottom: 10px;
+        gap: 20px;
+    
+        button {
+            font-size: 15px;    
+        }
+    }
+    
+    .header__pagination-button_active {
+        position: relative;
+    
+        &::before {
+            content: '';
+            bottom: -12px;
+        }
+    }
+    
+    .main-winner_active {
+        padding-top: 137px;
+    }
+    
+    .main__sound {
+        margin-top: 30px;
+        padding: 15px;
+    }
+    
+    .main__sound-img {
+        max-width: 139px;
+        height: 94px;
+    }
+    
+    .main__sound-content {
+        margin-left: 20px;
+    }
+    
+    .main__sound-player {
+        margin-top: 16px;
+    }
+    
+    .main__sound-play {
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+    }
+    
+    .main__player-content {
+        width: 100%;
+    }
+    
+    .main__player-content-time {
+        margin-top: 5px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        line-height: 14px;
+    }
+    
+    .main__controls {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 25px;
+        gap: 22px;
+    }
+    
+    .main__controls-block {
+        padding: 17px 20px;
+    }
+    
+    .main__controls-list {
+        max-width: 428px;
+    
+        li:not(:last-child) {
+            margin-bottom: 15px;
+        }
+        
+        button {
+            font-size: 18px;
+            line-height: 22px;
+        }
+    }
+    
+    .main__controls-block {
+        p {
+            font-size: 16px;
+            line-height: 22px;
+        }
+    }
+    
+    .block-content_about__content {
+        display: flex;
+    }
+    
+    .block-content_about__bird {
+        max-width: 100%;
+        width: 100%;
+        margin-left: 10px;
+    }
+    
+    .block-content_about__img {
+        max-width: 127px;
+        height: 92px;
+    }
+    
+    .block-content_about__bird-heading {
+        font-size: 22px;
+    }
+    
+    .main__controls-block-content_description {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    
+    .main-winner__heading {
+        font-weight: 400;
+        font-size: 64px;
+        line-height: 77px;
+    }
+    
+    .main-winner__description {
+        margin-bottom: 207px;
+        font-weight: 300;
+        font-size: 24px;
+        line-height: 29px;
+    }
+}
+
+@media(max-width: 900px) {
+    input[type=range] {
+      width: 11.11vw; 
+      height: 0.56vw;
+      border-radius: 0.44vw;
+    }
+    
+    input[type='range']::-webkit-slider-thumb {
+      height: 1.11vw;
+      width: 1.11vw;
+    }
+      
+
+    .app {
+        max-width: 93.33vw;
+        margin: 5.56vw auto;
+        padding: 2.22vw 3.33vw;
+    }
+    
+    .btn {
+        padding-top: 1.67vw;
+        padding-bottom: 1.78vw;
+        font-size: 1.78vw;
+    }
+
+    .header__logo {
+        width: 15.33vw;
+    }
+
+    .header__score {
+        font-size: 2.22vw;
+        line-height: 2.67vw;
+    }
+
+    .header__pagination {
+        margin-top: 2.78vw;
+        padding-bottom: 1.11vw;
+        gap: 2.22vw;
+    
+        button {
+            font-size: 1.67vw;    
+        }
+    }
+    
+    .header__pagination-button_active {
+        &::before {
+            bottom: -1.33vw;
+        }
+    }
+
+    .header__content {
+        button {
+            margin-right: 3.33vw;
+            font-size: 2.22vw;
+            line-height: 2.67vw;
+        }
+    }
+    
+    .main-winner_active {
+        padding-top: 15.22vw;
+    }
+    
+    .main__sound {
+        margin-top: 3.33vw;
+        padding: 1.67vw;
+    }
+
+    .main__sound-content {
+        h2 {
+            padding-bottom: 0.56vw;
+            font-size: 2.67vw;
+            line-height: 3.22vw;
+        }
+    }
+    
+    .main__sound-img {
+        max-width: 15.44vw;
+        height: 10.44vw;
+        border-radius: 2.78vw;
+    }
+    
+    .main__sound-content {
+        margin-left: 2.22vw;
+    }
+    
+    .main__sound-player {
+        margin-top: 1.78vw;
+    }
+    
+    .main__sound-play {
+        width: 4vw;
+        height: 4vw;
+        margin-right: 1.11vw;
+    }
+    
+    .main__player-content-time {
+        margin-top: 0.56vw;
+        font-size: 1.56vw;
+        line-height: 1.56vw;
+    }
+    
+    .main__controls {
+        margin-top: 2.78vw;
+        gap: 2.44vw;
+    }
+    
+    .main__controls-block {
+        height: 38.89vw;
+        padding: 1.89vw 2.22vw;
+    }
+    
+    .main__controls-list {
+        max-width: 47.56vw;
+    
+        li:not(:last-child) {
+            margin-bottom: 1.67vw;
+        }
+        
+        button {
+            font-size: 2vw;
+            line-height: 2.44vw;
+        }
+    }
+
+    .main__player-progress-circle {
+        width: 1.11vw;
+        height: 1.11vw;
+    }
+    
+    .main__controls-block {
+        p {
+            font-size: 1.78vw;
+            line-height: 2.44vw;
+        }
+    }
+    
+    .block-content_about__bird {
+        margin-left: 1.11vw;
+    }
+    
+    .block-content_about__img {
+        max-width: 14.11vw;
+        height: 10.22vw;
+        border-radius: 2.78vw;
+    }
+    
+    .block-content_about__bird-heading {
+        font-size: 2.44vw;
+        line-height: 3.22vw;
+    }
+    
+    .main__controls-block-content_description {
+        margin-top: 1.11vw;
+        font-size: 1.56vw;
+    }
+    
+    .main-winner__heading {
+        font-size: 7.11vw;
+        line-height: 8.56vw;
+    }
+    
+    .main-winner__description {
+        margin-bottom: 23vw;
+        font-size: 2.67vw;
+        line-height: 3.22vw;    
+    }
 }
