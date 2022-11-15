@@ -29,8 +29,6 @@ function init() {
     let mainAudio = null;
     let cardAudio = null;
 
-    let t = null; 
-
     function createStartImages() {
         document.querySelector('.header__logo').src = logo;
         document.querySelector('.main__sound-img').src = bird;
@@ -76,7 +74,10 @@ function init() {
         } else {
             totalBirds = birdsEn[currentStage];
             generatedBird = birdsEn[currentStage][getRandomNumber(0,5)];
-        };
+        }
+
+        document.querySelector('.main__player-content-time_total').textContent = (appLanguage === 'ru') ? 'Загрузка...' : 'Loading...';
+        document.querySelector('.generate-bird__play').disabled = true;
 
         mainAudio = new Audio(generatedBird.audio);
         mainAudio.volume = 0.7;
@@ -84,6 +85,7 @@ function init() {
             const time = getTimeCode(mainAudio.duration);
             document.querySelector('.main__player-content-time_total').textContent = `${time.minutes}:${time.seconds}`;
             createTimeline(document.querySelector('.main__player-timeline'), mainAudio);
+            document.querySelector('.generate-bird__play').disabled = false;
         });
     };
 
@@ -91,14 +93,19 @@ function init() {
         const list = document.querySelector('.modal-content');
 
         let totalBirds = [];
-        birds.map(item => totalBirds.push(...item));
 
-        totalBirds.forEach(bird => {
-            createGalleryItem(list, bird);
+        if (appLanguage === 'ru') {
+            birds.map(item => totalBirds.push(...item));
+        } else {
+            birdsEn.map(item => totalBirds.push(...item));
+        }
+
+        totalBirds.forEach((bird, index) => {
+            createGalleryItem(list, bird, index);
         });
     };
 
-    function createGalleryItem(list, bird) {
+    function createGalleryItem(list, bird, index) {
         const audio = new Audio(bird.audio);
 
         audio.addEventListener('loadeddata', () => {
@@ -129,6 +136,15 @@ function init() {
         const currentTime = document.createElement('div');
         const totalTime = document.createElement('div');
 
+        const range = document.createElement('input');
+        range.classList.add('main__player-range')
+        range.min = '0';
+        range.max = '1';
+        range.step = '0.1';
+        range.type = 'range';
+
+        range.addEventListener('input', (e) => audio.volume = +e.target.value)
+
         circle.classList.add('main__player-progress-circle');
         progress.classList.add('main__player-progress');
         timeline.classList.add('main__player-timeline');
@@ -149,8 +165,9 @@ function init() {
         progress.append(circle);
         timeline.append(progress);
         playerContent.append(timeline, contentTime);
-        player.append(playerBtn, playerContent);
+        player.append(playerBtn, playerContent, range);
         playerBtn.addEventListener('click', () => generateItemPlay(audio, playerBtn, currentTime, progress));
+        createTimeline(timeline, audio)
 
         item.classList.add('gallery__item');
         content.classList.add('gallery__item-content');
@@ -259,10 +276,14 @@ function init() {
         document.querySelector('.main__controls-block-content_about').classList.add('main__controls-block-content_about_active');
         document.querySelector('.main__controls-block-content').classList.remove('main__controls-block-content_active');
 
+        document.querySelector('.about-bird__play').disabled = true;
+        document.querySelector('.card-bird__time').textContent = (appLanguage === 'ru') ? 'Загрузка...' : 'Loading...';
+
         cardAudio = new Audio(bird.audio);
         cardAudio.addEventListener('loadeddata', () => {
             const time = getTimeCode(cardAudio.duration);
             document.querySelector('.about-total').textContent = `${time.minutes}:${time.seconds}`;
+            document.querySelector('.about-bird__play').disabled = false;
         });
 
         const button = document.querySelector('.about-bird__play');
@@ -271,6 +292,7 @@ function init() {
         function play() {
             generateItemPlay(cardAudio, button, document.querySelector('.about-total'), document.querySelector('.about-bird__progress'));
         };
+
         const timeline = document.querySelector('.about-bird__timeline');
         createTimeline(timeline, cardAudio);
     };
@@ -286,7 +308,6 @@ function init() {
         return totalBirds.find((item) => item.name === bird);
     };
 
-    
     function birdFinded() {
         successAudio.play();
 
@@ -307,6 +328,7 @@ function init() {
 
     function changeStage() {
        const btn = document.querySelector('.main__btn');
+       btn.classList.add('btn-active')
        btn.disabled = false;
        btn.addEventListener('click', nextStage);
     };
@@ -329,6 +351,7 @@ function init() {
             changeStageTab();
             createListOfAnswers();
             document.querySelector('.main__btn').disabled = true;
+            document.querySelector('.main__btn').classList.remove('btn-active');
         };
     };
 
@@ -351,9 +374,14 @@ function init() {
 
         const finishTextStart = (appLanguage === 'ru') ? translations.ru.finishGame[1] : translations.en.finishGame[1];
         const finishTextEnd = (appLanguage === 'ru') ? translations.ru.finishGame[2] : translations.en.finishGame[2];
+        const finishTextMax = (appLanguage === 'ru') ? translations.ru.finishGame[3] : translations.en.finishGame[3];
 
-        document.querySelector('.main-winner__description').textContent = `${finishTextStart} ${totalScore} ${finishTextEnd}`;
-        
+        if (totalScore === 30) {
+            document.querySelector('.main-winner__description').textContent = finishTextMax;
+        } else {
+            document.querySelector('.main-winner__description').textContent = `${finishTextStart} ${totalScore} ${finishTextEnd}`;
+        };
+    
         totalScore = 0;
         levelScore = 5;
         currentStage = -1;
@@ -377,4 +405,15 @@ function init() {
     generateBird();
     createGallery();
     createListOfAnswers();
+
+    document.querySelector('.loader_description').textContent = (appLanguage === 'ru') ? 'Загрузка приложения...' : 'App is loading...';
+
+    window.onload = function() {
+        document.querySelector('.loading').classList.remove('loading_active');
+        document.querySelector('.loader').classList.remove('loader_active');
+    };
 };
+
+
+document.addEventListener('DOMContentLoaded', init);
+
