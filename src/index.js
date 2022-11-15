@@ -204,12 +204,9 @@ function init() {
     };
 
     function changeLanguage() {
-        const button = document.querySelector('.change-langue');
-        button.addEventListener('click', (e) => {
-            appLanguage = (appLanguage === 'ru') ? 'en' : 'ru';
-            localStorage.setItem('language', appLanguage);
-            window.location.reload();
-        });
+        appLanguage = (appLanguage === 'ru') ? 'en' : 'ru';
+        localStorage.setItem('language', appLanguage);
+        window.location.reload();
     };
 
     function createTimeline(timeline, audio) {
