@@ -284,6 +284,7 @@ function init() {
         });
 
         const button = document.querySelector('.about-bird__play');
+
         button.addEventListener('click', play);
 
         function play() {
@@ -295,6 +296,14 @@ function init() {
     };
 
     function generateBirdCardContent(bird) {
+        const button = document.createElement('button');
+        const wrapper = document.querySelector('.main__sound-wrapper');
+
+        button.classList.add('main__sound-play','about-bird__play');
+        
+        wrapper.innerHTML = '';
+        wrapper.append(button);
+
         document.querySelector('.block-content_about__img').src = bird.image;
         document.querySelector('.block-content_about__bird-heading').textContent = bird.name;
         document.querySelector('.block-content_about__bird-description').textContent = bird.species;    
