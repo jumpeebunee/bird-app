@@ -300,7 +300,7 @@ function init() {
         const wrapper = document.querySelector('.main__sound-wrapper');
 
         button.classList.add('main__sound-play','about-bird__play');
-        
+
         wrapper.innerHTML = '';
         wrapper.append(button);
 
@@ -413,6 +413,7 @@ function init() {
     createListOfAnswers();
 
     document.querySelector('.loader_description').textContent = (appLanguage === 'ru') ? 'Загрузка приложения...' : 'App is loading...';
+    document.querySelector('.header__score-points').textContent = `${(appLanguage === 'ru' ? translations.ru.options[2] : translations.en.options[2])} ${totalScore}`;
 
     window.onload = function() {
         document.querySelector('.loading').classList.remove('loading_active');
