@@ -316,6 +316,8 @@ function init() {
 
     function birdFinded() {
         successAudio.play();
+        mainAudio.pause();
+        cardAudio.pause();
 
         const heading = document.querySelector('.main__sound-content-title');
         const image = document.querySelector('.main__sound-img');
