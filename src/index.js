@@ -244,6 +244,7 @@ function init() {
         return item;
     };
 
+
     function checkIsTrue(e) {
         const target = e.target;
 
@@ -252,16 +253,17 @@ function init() {
             return;
         };
 
+        createBirdCard(target);
+
         if (target.textContent === generatedBird.name) {
             target.classList.add('controls-list__btn_true');
-            birdFinded();
+            birdFinded(target);
         } else {
             target.classList.add('controls-list__btn_false');
             errorAudio.play();
             levelScore -= 1;
         };
 
-        createBirdCard(target);
     };
 
     function createBirdCard(item) {
